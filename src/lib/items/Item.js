@@ -234,10 +234,10 @@ export default class Item extends Component {
           bottom: false
         },
         enabled:
-          this.props.selected && (this.canResizeLeft() || this.canResizeRight())
+          (this.canResizeLeft() || this.canResizeRight())
       })
       .draggable({
-        enabled: this.props.selected && this.canMove()
+        enabled: this.canMove()
       })
       .styleCursor(false)
       .on('dragstart', e => {
@@ -414,19 +414,19 @@ export default class Item extends Component {
   componentDidUpdate(prevProps) {
     this.cacheDataFromProps(this.props)
     let { interactMounted } = this.state
-    const couldDrag = prevProps.selected && this.canMove(prevProps)
+    const couldDrag = this.canMove(prevProps)
     const couldResizeLeft =
-      prevProps.selected && this.canResizeLeft(prevProps)
+      this.canResizeLeft(prevProps)
     const couldResizeRight =
-      prevProps.selected && this.canResizeRight(prevProps)
-    const willBeAbleToDrag = this.props.selected && this.canMove(this.props)
+      this.canResizeRight(prevProps)
+    const willBeAbleToDrag = this.canMove(this.props)
     const willBeAbleToResizeLeft =
-      this.props.selected && this.canResizeLeft(this.props)
+      this.canResizeLeft(this.props)
     const willBeAbleToResizeRight =
-      this.props.selected && this.canResizeRight(this.props)
+      this.canResizeRight(this.props)
 
     if(!!this.item){
-      if (this.props.selected && !interactMounted) {
+      if (!interactMounted) {
         this.mountInteract()
         interactMounted = true
       }
@@ -462,6 +462,9 @@ export default class Item extends Component {
   }
 
   onMouseDown = e => {
+    if(!this.props.selected)
+      this.props.onSelect(this.itemId, "mouse", e)
+    e.stopPropagation();
     if (!this.state.interactMounted) {
       e.preventDefault()
       this.startedClicking = true
