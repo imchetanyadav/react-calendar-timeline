@@ -418,22 +418,23 @@ export function stackAll(itemsDimensions, groupOrders, lineHeight, stackItems) {
  * @param {*} groupTop 
  */
 export function stackGroup(itemsDimensions, isGroupStacked, lineHeight, groupTop) {
+  const items = itemsDimensions.sort((a,b) => a.start - b.start);
   var groupHeight = 0
   var verticalMargin = 0
   // Find positions for each item in group
-  for (let itemIndex = 0; itemIndex < itemsDimensions.length; itemIndex++) {
+  for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
     let r = {}
     if (isGroupStacked) {
       r = groupStack(
         lineHeight,
-        itemsDimensions[itemIndex],
-        itemsDimensions,
+        items[itemIndex],
+        items,
         groupHeight,
         groupTop,
         itemIndex
       )
     } else {
-      r = groupNoStack(lineHeight, itemsDimensions[itemIndex], groupHeight, groupTop)
+      r = groupNoStack(lineHeight, items[itemIndex], groupHeight, groupTop)
     }
     groupHeight = r.groupHeight
     verticalMargin = r.verticalMargin
@@ -578,6 +579,7 @@ export function getItemDimensions({
     dimension.height = lineHeight * itemHeightRatio
     return {
       id: itemId,
+      start: item.start,
       dimensions: dimension
     }
   }
