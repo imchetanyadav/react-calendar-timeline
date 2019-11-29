@@ -579,7 +579,7 @@ export function getItemDimensions({
     dimension.height = lineHeight * itemHeightRatio
     return {
       id: itemId,
-      start: item.start,
+      start: item.start_time,
       dimensions: dimension
     }
   }
